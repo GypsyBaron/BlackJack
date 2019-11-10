@@ -27,21 +27,35 @@ public class Game {
             dealerCardCounter = 0;
             cardDeckIndex = 0;
 
-            for (int i = 0; i < 2; i++) {
-                dealCard(cardDeck, cardDeckIndex, playerHand, playerCardCounter);
-                cardDeckIndex++;
-                playerCardCounter++;
-            }
+            System.out.println("----------------------------");
+            System.out.println("Dealer card");
             for (int i = 0; i < 2; i++) {
                 dealCard(cardDeck, cardDeckIndex, dealerHand, dealerCardCounter);
+                if (i != 1) {
+                    showCard(dealerHand, dealerCardCounter);
+                }
                 cardDeckIndex++;
                 dealerCardCounter++;
             }
 
-            System.out.println("Dealer hand: ");
-            showCards(dealerHand, playerCardCounter);
-            System.out.println("My hand: ");
-            showCards(playerHand, playerCardCounter);
+            System.out.println("----------------------------");
+            System.out.println("My cards");
+            for (int i = 0; i < 2; i++) {
+                dealCard(cardDeck, cardDeckIndex, playerHand, playerCardCounter);
+                showCard(playerHand, playerCardCounter);
+                cardDeckIndex++;
+                playerCardCounter++;
+            }
+            System.out.println("----------------------------");
+
+            if (Integer.parseInt(playerHand[0][1]) + Integer.parseInt(playerHand[1][1]) == 21) {
+                if (Integer.parseInt(dealerHand[0][1]) + Integer.parseInt(dealerHand[1][1]) != 21) {
+                    System.out.println("You won the game");
+                } else {
+                    System.out.println("Draw. Nice game");
+                }
+                break;
+            }
 
             while (!isGameOver) {
 
@@ -49,25 +63,15 @@ public class Game {
                 boolean isInputCorrect = false;
                 String input;
 
-                if (playerCardCounter == 2 && (Integer.parseInt(playerHand[0][1]) + Integer.parseInt(playerHand[1][1])) == 21) {
-                    if (Integer.parseInt(dealerHand[0][1]) + Integer.parseInt(dealerHand[1][1]) < 21) {
-                        System.out.println("YOU WON THE GAME");
-                    } else if (Integer.parseInt(dealerHand[0][1]) + Integer.parseInt(dealerHand[1][1]) == 21) {
-                        System.out.println("DRAW. NICE GAME");
-                    } else {
-                        System.out.println("DEALER GOT TWO ACES. TRY NEXT TIME");
-                    }
-                    break;
-                }
 
                 System.out.println("To hit - H, to stand - S");
                 while (!isInputCorrect) {
                     input = sc.nextLine().trim().toUpperCase();
                     if (input.equals("H")) {
                         dealCard(cardDeck, cardDeckIndex, playerHand, playerCardCounter);
+                        //showCard(playerHand, playerCardCounter);
                         cardDeckIndex++;
                         playerCardCounter++;
-                        showCards(playerHand, playerCardCounter);
                         isInputCorrect = true;
                     } else if (input.equals("S")) {
                         isStand = true;
@@ -77,20 +81,28 @@ public class Game {
                     }
                 }
 
+                System.out.println("------ My cards --------");
+                for (int i = 0; i < playerCardCounter; i++) {
+                    showCard(playerHand, i);
+                }
+
                 if (minHandValue(playerHand, playerCardCounter) > 21) {
                     System.out.println("Your hand is over 21, you loose.");
                     break;
                 }
 
                 if (isStand) {
+
                     System.out.println("You select stand, let's see dealer cards.");
                     playerCardSum = maxHandValue(playerHand, playerCardCounter);
-                    dealerCardSum = maxHandValue(dealerHand, dealerCardCounter);
-
-                    if (playerCardSum > 21) {
+                    if (maxHandValue(playerHand, playerCardCounter) > 21) {
                         playerCardSum = minHandValue(playerHand, playerCardCounter);
+                    } else {
+                        playerCardSum = maxHandValue(playerHand, playerCardCounter);
                     }
+                    System.out.println("My hand value - " + playerCardSum);
 
+                    dealerCardSum = maxHandValue(dealerHand, dealerCardCounter);
                     int dealerMaxHandValue = 0;
                     int dealerMinHandValue = 0;
 
@@ -100,28 +112,33 @@ public class Game {
 
                         if (dealerMaxHandValue <= 21) {
                             dealerCardSum = dealerMaxHandValue;
-                        } else if (dealerMinHandValue <= 21) {
-                            dealerCardSum = dealerMinHandValue;
                         } else {
                             dealerCardSum = dealerMinHandValue;
                         }
 
                         dealCard(cardDeck, cardDeckIndex, dealerHand, dealerCardCounter);
+                        showCard(dealerHand, dealerCardCounter);
                         cardDeckIndex++;
                         dealerCardCounter++;
                     }
 
-                    showCards(dealerHand, dealerCardCounter);
-                    System.out.println("Dealer hand value: " + dealerCardSum);
-                    if (dealerCardSum > 21) {
-                        System.out.println("YOU WON THE GAME. CONGRATULATIONS!!!");
-                    } else if (playerCardSum > dealerCardSum) {
-                        System.out.println("YOU WON THE GAME. CONGRATULATIONS!!!");
-                    } else if (playerCardSum == dealerCardSum) {
-                        System.out.println("DRAW");
-                    } else {
-                        System.out.println("YOU LOST. TRY NEXT TIME");
+                    System.out.println("------ Dealer cards --------");
+                    for (int i = 0; i < playerCardCounter; i++) {
+                        showCard(dealerHand, i);
                     }
+                    System.out.println("Dealer hand value: " + dealerCardSum);
+
+                    if (dealerCardSum > 21) {
+                        System.out.println("You won the game");
+                    } else if (playerCardSum > dealerCardSum) {
+                        System.out.println("You won the game");
+                    } else if (playerCardSum == dealerCardSum) {
+                        System.out.println("Draw. Nice game");
+                    } else {
+                        System.out.println("You lost the game. Try next time");
+                    }
+
+                    isGameOver = true;
                 }
             }
 
@@ -129,8 +146,17 @@ public class Game {
             if (!sc.nextLine().trim().toUpperCase().equals("Y")) {
                 isPlaying = false;
                 sc.close();
-                Runtime.getRuntime().exec("cls");
             }
+        }
+    }
+
+    private static void showCard(String[][] hand, int cardIndex) {
+        if (Integer.parseInt(hand[cardIndex][1]) < 10) {
+            System.out.println(hand[cardIndex][0]);
+        } else if (Integer.parseInt(hand[cardIndex][1]) == 10) {
+            System.out.println(hand[cardIndex][0] + " - 10");
+        } else {
+            System.out.println(hand[cardIndex][0] + " - 1 or 11");
         }
     }
 
@@ -145,7 +171,6 @@ public class Game {
                 handSum += Integer.parseInt(hand[i][1]);
             }
         }
-        System.out.println("Min hand value: " + handSum);
         return handSum;
     }
 
@@ -154,7 +179,6 @@ public class Game {
         for (int i = 0; i < handCounter; i++) {
             handSum += Integer.parseInt(hand[i][1]);
         }
-        System.out.println("Max hand value: " + handSum);
         return handSum;
     }
 
