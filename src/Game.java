@@ -1,3 +1,5 @@
+import jdk.swing.interop.SwingInterOpUtils;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -107,6 +109,7 @@ public class Game {
                     int dealerMinHandValue = 0;
 
                     while (dealerCardSum < 17) {
+                        System.out.println("Suma cikle - " + dealerCardSum);
                         dealerMaxHandValue = maxHandValue(dealerHand, dealerCardCounter);
                         dealerMinHandValue = minHandValue(dealerHand, dealerCardCounter);
 
@@ -116,14 +119,18 @@ public class Game {
                             dealerCardSum = dealerMinHandValue;
                         }
 
+                        if (dealerCardSum >= 17) {
+                            break;
+                        }
+
                         dealCard(cardDeck, cardDeckIndex, dealerHand, dealerCardCounter);
-                        showCard(dealerHand, dealerCardCounter);
                         cardDeckIndex++;
                         dealerCardCounter++;
                     }
 
                     System.out.println("------ Dealer cards --------");
-                    for (int i = 0; i < playerCardCounter; i++) {
+                    System.out.println("Dealer has " + dealerCardCounter + " cards.");
+                    for (int i = 0; i < dealerCardCounter; i++) {
                         showCard(dealerHand, i);
                     }
                     System.out.println("Dealer hand value: " + dealerCardSum);

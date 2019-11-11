@@ -89,7 +89,8 @@
       <workItem from="1573374558195" duration="6472000" />
       <workItem from="1573402780249" duration="2184000" />
       <workItem from="1573417136319" duration="2364000" />
-      <workItem from="1573419527725" duration="2239000" />
+      <workItem from="1573419527725" duration="2920000" />
+      <workItem from="1573474048714" duration="1664000" />
     </task>
     <servers />
   </component>
@@ -112,5 +113,15 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Console out looks more understandable" />
     <option name="LAST_COMMIT_MESSAGE" value="Console out looks more understandable" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/out/production/BlackJack/Game.class</url>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>
